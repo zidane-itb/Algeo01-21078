@@ -113,17 +113,17 @@ public class Matrix {
                 for (int j = i+1; j < verticalSize; ++j) {
                     wIdx = 0; lOneFSIdx = -1;
                     while (wIdx < hSize && lOneFSIdx == -1) {
-                        if (Math.abs(matrix[i][wIdx]) >= 0.000000000001)
+                        if (Math.abs(matrix[j][wIdx]) >= 0.000000000001)  {
                             lOneFSIdx = wIdx;
-
+                        }
                         ++wIdx;
                     }
 
                     if ((lOneIdx > lOneFSIdx && lOneFSIdx != -1) || (lOneIdx == -1 && lOneFSIdx != -1)) {
                         switchRows(matrix, i, j);
                         lOneIdx = lOneFSIdx;
-                        break;
                     }
+
                 }
 
                 if (lOneIdx == -1)
@@ -138,6 +138,7 @@ public class Matrix {
 
                     rowAdditionRow(matrix, j, i, matrix[j][lOneIdx] * -1);
                 }
+
             }
 
             return matrix;
