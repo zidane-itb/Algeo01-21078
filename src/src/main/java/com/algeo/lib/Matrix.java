@@ -168,9 +168,11 @@ public class Matrix {
 
             return echelonMatrix;
         }
+
         private static double[][] getInverseMatrixSpl(double[][] matrix) {
             return getInverseMatrixMaster(matrix, true);
         }
+
         private static double[][] getInverseMatrix(double[][] matrix)  {
             return getInverseMatrixMaster(matrix, false);
         }
@@ -248,12 +250,12 @@ public class Matrix {
             for (int i = 0; i < matrix.length; ++i) {
                 for (int j = 0; j < matrix[0].length; ++j) {
                     if (i == j) {
-                        if (matrix[i][j] != 1)
+                        if (Math.abs(matrix[i][j] - 1) > 0.00001)
                             return false;
                         continue;
                     }
 
-                    if (matrix[i][j] != 0)
+                    if (Math.abs(matrix[i][j]) > 0.00001)
                         return false;
                 }
             }
