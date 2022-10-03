@@ -42,14 +42,18 @@ public class ProgramHandler {
             out.printf("Mau save matriks ini ke file? (y/n) ");
             Scanner s = new Scanner(System.in);
             String ans = s.nextLine();
-
+            
             if (ans.equals("y") || ans.equals("Y")){
 
-                ans = s.nextLine();
+                String path, filename;
+                out.println("Masukkan path folder penyimpanan file : ");
+                path = s.nextLine();
+                out.println("Masukkan nama file : ");
+                filename = s.nextLine();
 
                 try {
-                    Matrix.saveMatrixToFile("public\\files", ans, matrixToSave);
-                    System.out.printf("sadad\n");
+                    Matrix.saveMatrixToFile(path, filename, matrixToSave);  
+                    
                     break;
                 } catch(IOException e) {
                     out.printf("Masukan path salah!");
@@ -57,9 +61,27 @@ public class ProgramHandler {
             } else
             if (ans.equals("n") || ans.equals("N")){
                 break;
-            }
+            } 
         }
     }
+
+    private static Matrix readMatrix(Matrix matrix){
+
+        while(true){
+            try{
+                Scanner s = new Scanner(System.in);
+                matrix.loadMatrix(s.nextLine());
+
+                break;
+            }
+            catch (IOException e){
+                out.println("Masukan nama file salah!");
+            }
+        }
+        
+        return matrix;
+    }
+
 
     private static int mainMenu() {
         // handle non 1-2-3-or-4567 inputs!
@@ -211,8 +233,7 @@ public class ProgramHandler {
 
                             if(readMode == 1) matrix = new Matrix(loadMatrix());
                             else if(readMode == 2) {
-                                Scanner s = new Scanner(System.in);
-                                matrix.loadMatrix(s.nextLine());
+                                matrix = readMatrix(matrix);
                             }
 
 
@@ -246,8 +267,7 @@ public class ProgramHandler {
 
                             if(readMode == 1) matrix = new Matrix(loadMatrix());
                             else if(readMode == 2) {
-                                Scanner s = new Scanner(System.in);
-                                matrix.loadMatrix(s.nextLine());
+                                matrix = readMatrix(matrix);
                             }
 
                             double[][] testMatrix = matrix.getReducedEchelonMatrix().getMatrix();
@@ -280,8 +300,7 @@ public class ProgramHandler {
 
                             if(readMode == 1) matrix = new Matrix(loadMatrix());
                             else if(readMode == 2) {
-                                Scanner s = new Scanner(System.in);
-                                matrix.loadMatrix(s.nextLine());
+                                matrix = readMatrix(matrix);
                             }
 
                             double[][] testMatrix = matrix.getInverseMatrix().getMatrix();
@@ -314,8 +333,7 @@ public class ProgramHandler {
 
                             if(readMode == 1) matrix = new Matrix(loadMatrix());
                             else if(readMode == 2) {
-                                Scanner s = new Scanner(System.in);
-                                matrix.loadMatrix(s.nextLine());
+                                matrix = readMatrix(matrix);
                             }
 
                             double[][] matrixR = matrix.solveMatrixCramer();
@@ -357,8 +375,7 @@ public class ProgramHandler {
 
                             if(readMode == 1) matrix = new Matrix(loadMatrix());
                             else if(readMode == 2) {
-                                Scanner s = new Scanner(System.in);
-                                matrix.loadMatrix(s.nextLine());
+                                matrix = readMatrix(matrix);
                             }
 
                             double determinantResult = matrix.solveDeterminantByCofactor();
@@ -378,10 +395,18 @@ public class ProgramHandler {
                 if (selectedSubMenu == 1) {
                     while (true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                matrix = readMatrix(matrix);
+                            }
 
                             out.print("Inverse result :");
                             printMatrixTest(matrix.getInverseMatrix().getMatrix());
+                            
+                            saveAsFile(matrix.getInverseMatrix().getMatrix());
                             break;
                         } catch (UnsupportedOperationException exception) {
                             out.print("Try again with different matriks!\n");
@@ -391,10 +416,18 @@ public class ProgramHandler {
                 else if (selectedSubMenu == 2) {
                     while (true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+                            
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                matrix = readMatrix(matrix);
+                            }
 
                             out.print("Inverse result :");
                             printMatrixTest(matrix.solveInverseByAdjoin());
+
+                            saveAsFile(matrix.solveInverseByAdjoin());
                             break;
                         } catch (UnsupportedOperationException exception) {
                             out.print("Try again with different matriks!\n");
