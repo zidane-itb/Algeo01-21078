@@ -1,7 +1,3 @@
-package com.algeo;
-
-import com.algeo.lib.Matrix;
-
 import java.util.Scanner;
 
 import static java.lang.System.*;
@@ -176,7 +172,7 @@ public class RegresiLinearBerganda {
         }
 
         boolean first = true;
-        if (Math.abs(matrix[0][matrix[0].length-1]) != 0) {
+        if (Math.abs(matrix[0][matrix[0].length-1]) > 0.000000000001) {
             System.out.printf("%.2f ", matrix[0][matrix[0].length - 1]);
             first = false;
         }

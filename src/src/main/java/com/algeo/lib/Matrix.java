@@ -1,4 +1,4 @@
-package com.algeo.lib;
+
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,14 @@ import lombok.Setter;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static java.lang.System.out;
 
@@ -62,7 +65,7 @@ public class Matrix {
 
             for (double[] doubles : matrix) {
                 for (int j = 0; j < horizontalSize; ++j) {
-                    out.printf("%.2f ", doubles[j]);
+                    out.printf("%f ", doubles[j]);
                 }
                 out.println();
             }
@@ -187,7 +190,7 @@ public class Matrix {
             double[][] matrixAIdentity = mergeMatrices(matrix, generateIdentityMatrix(matrix.length));
             double[][] reducedEMatrix = getReducedEchelonMatrix(matrixAIdentity, matrixAIdentity.length);
 
-            if (!isIdentityMatrix(cutMatrixColumns(reducedEMatrix, 0, matrix.length-1)))
+            if (!isIdentityMatrix(cutMatrixColumns(reducedEMatrix, 0, reducedEMatrix[0].length-matrix.length-1)))
                 throw new UnsupportedOperationException("Matrix does not have an inverse");
 
             return spl ? mergeMatrices(cutMatrixColumns(matrixAIdentity, matrix.length, reducedEMatrix[0].length - 1), rhs)
@@ -247,12 +250,12 @@ public class Matrix {
             for (int i = 0; i < matrix.length; ++i) {
                 for (int j = 0; j < matrix[0].length; ++j) {
                     if (i == j) {
-                        if (Math.abs(matrix[i][j] - 1) > 0.00001)
+                        if (matrix[i][j] != 1)
                             return false;
                         continue;
                     }
 
-                    if (Math.abs(matrix[i][j]) > 0.00001)
+                    if (matrix[i][j] != 0)
                         return false;
                 }
             }
@@ -424,9 +427,41 @@ public class Matrix {
                 return matrix[0][0];
             }
             else {
+                int nZeroRow, nZeroCol, zeroRow, zeroCol, nZeroRowTemp, nZeroColTemp;
+                nZeroRow = 0;
+                nZeroCol = 0;
+                zeroRow = 0;
+                zeroCol = 0;
+                for (int j = 1; j < matrix.length; j++) {
+                    nZeroRowTemp = 0;
+                    nZeroColTemp = 0;
+                    for (int k = 0; k < matrix.length; k++) {
+                        if (matrix[j][k] == 0) {
+                            nZeroRowTemp += 1;
+                        }
+                        if (matrix[k][j] == 0) {
+                            nZeroColTemp += 1;
+                        }
+                    }
+                    if (nZeroRow < nZeroRowTemp) {
+                        nZeroRow = nZeroRowTemp;
+                        zeroRow = j;
+                    }
+                    if (nZeroCol < nZeroColTemp) {
+                        nZeroCol = nZeroColTemp;
+                        zeroCol = j;
+                    }
+
+                }
+
                 determinant = 0;
                 for (i = 0; i < matrix[0].length; i++) {
-                    determinant += Math.pow(-1, i) * matrix[0][i] * getDeterminantByCofactor(getMinorMatrix(matrix, 0, i));
+                    if (nZeroRow >= nZeroCol) {
+                        determinant += Math.pow(-1, i+zeroRow) * matrix[zeroRow][i] * getDeterminantByCofactor(getMinorMatrix(matrix, zeroRow, i));
+                    }
+                    else {
+                        determinant += Math.pow(-1, i+zeroCol) * matrix[i][zeroCol] * getDeterminantByCofactor(getMinorMatrix(matrix, i, zeroCol));
+                    }
                 }
                 return determinant;
             }
@@ -445,28 +480,29 @@ public class Matrix {
         }
 
         private static double getDeterminantByRowReduction(double[][] matrix) {
+            double[][] newMatrix = copyMatrix(matrix);
             double determinant = 1;
 
-            for (int i = 0; i < matrix.length-1; i++) {
-                if (matrix[i][i] == 0) {
-                    swapZeroRow(matrix, i);
+            for (int i = 0; i < newMatrix.length-1; i++) {
+                if (newMatrix[i][i] == 0) {
+                    swapZeroRow(newMatrix, i);
                     determinant *= -1;
                 }
 
-                for (int j = i + 1; j < matrix.length; j++) {
-                    double multiplier = matrix[j][i]/matrix[i][i];
+                for (int j = i + 1; j < newMatrix.length; j++) {
+                    double multiplier = newMatrix[j][i]/newMatrix[i][i];
 
-                    if (multiplier*matrix[i][i] < 0 && matrix[j][i] < 0) {
+                    if (multiplier*newMatrix[i][i] < 0 && newMatrix[j][i] < 0) {
                         multiplier *= -1;
-                    } else if (multiplier*matrix[i][i] > 0 && matrix[j][i] > 0) {
+                    } else if (multiplier*newMatrix[i][i] > 0 && newMatrix[j][i] > 0) {
                         multiplier *= -1;
                     }
 
-                    rowAdditionRow(matrix, j, i, multiplier);
+                    rowAdditionRow(newMatrix, j, i, multiplier);
                 }
             }
-            for (int k = 0; k < matrix.length; k++) {
-                determinant *= matrix[k][k];
+            for (int k = 0; k < newMatrix.length; k++) {
+                determinant *= newMatrix[k][k];
             }
             if (determinant == -0) {
                 return 0;
@@ -487,15 +523,15 @@ public class Matrix {
         private static double[][] solveCrammerMatrix(double[][] mainMatrix, double[][] rightSideMatrix) {
             double[][] resultMatrix = new double[1][mainMatrix.length];
 
-            if (MatrixHelper.getDeterminantByCofactor(mainMatrix) != 0) {
-                for (int i = 0; i < mainMatrix.length; i++) {
-                    double[][] tempMatrix = changeColumn(copyMatrix(mainMatrix), rightSideMatrix, i);
-                    double divResult = getDeterminantByCofactor(tempMatrix)/getDeterminantByCofactor(mainMatrix);
-                    resultMatrix[0][i] = divResult;
-                }
-                return resultMatrix;
+            for (int i = 0; i < mainMatrix.length; i++) {
+                double[][] copyMainMatrix = copyMatrix(mainMatrix);
+                double[][] tempMatrix = changeColumn(copyMainMatrix, rightSideMatrix, i);
+                double divResult = getDeterminantByRowReduction(tempMatrix)/getDeterminantByRowReduction(mainMatrix);
+                resultMatrix[0][i] = divResult;
             }
-            else throw new UnsupportedOperationException("Main matrix determinant is 0");
+
+
+            return resultMatrix;
         }
         private static double[][] getCrammerMatrix(double[][] matrix) {
             double[][] mainMatrix = MatrixHelper.cutMatrixColumns(matrix, 0, matrix[0].length-2);
@@ -505,6 +541,53 @@ public class Matrix {
             return MatrixHelper.solveCrammerMatrix(mainMatrix, rightSideMatrix);
         }
 
+    }
+
+    /**
+     *
+     */
+    // TODO: add try catch for type parsing (parseInt and parseDouble) to avoid killing program for wrong input
+    public void loadMatrixLine() {
+        Scanner scanner = new Scanner(System.in);
+        String line;
+        String[] elementArr;
+
+        out.println("Input matrix : ");
+        while (true) {
+            line = scanner.nextLine();
+            elementArr = line.split(" ");
+
+            if (elementArr.length > 2)
+                out.println("wrong format");
+
+            this.verticalSize = Integer.parseInt(elementArr[0]);
+            this.horizontalSize = Integer.parseInt(elementArr[1]);  // handle this
+            break;
+        }
+
+        double[][] matrix = new double[verticalSize][horizontalSize];
+
+        for (int i = 0; i < verticalSize; ++i) {
+            line = scanner.nextLine();
+            elementArr = line.split(" ");
+
+            // System.out.printf("%d, %d<\n", elementArr.length, horizontalSize);
+
+            if (elementArr.length != horizontalSize) {
+                out.println("Wrong format");
+                i -= 1;
+                continue;
+            }
+
+            int hIdx = 0;
+
+            for (String str: elementArr) {
+                matrix[i][hIdx] = Double.parseDouble(str);
+                ++hIdx;
+            }
+        }
+
+        setMatrix(matrix);
     }
 
     /**
@@ -547,6 +630,7 @@ public class Matrix {
         return new Matrix(MatrixHelper.multiplyMatrix(matrix1.getMatrix(), matrix2.getMatrix()));
     }
 
+    // TODO: add java doc
     /**
      *
      * @return
@@ -558,6 +642,7 @@ public class Matrix {
         return MatrixHelper.getCrammerMatrix(getMatrix());
     }
 
+    // TODO: add java doc
     /**
      *
      * @return
@@ -569,6 +654,7 @@ public class Matrix {
         return MatrixHelper.getDeterminantByCofactor(getMatrix());
     }
 
+    // TODO: add java doc
     /**
      *
      * @return
@@ -710,4 +796,3 @@ public class Matrix {
     }
 
 }
-
