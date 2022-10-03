@@ -1,3 +1,5 @@
+package com.algeo;
+
 import java.io.IOException;
 
 public class MainProgram {

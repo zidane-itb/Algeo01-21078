@@ -1,6 +1,9 @@
+package com.algeo;
+
+import com.algeo.lib.Matrix;
+
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.IOException;
@@ -64,7 +67,7 @@ public class BicubicInterpolationSolver {
     /**
      * a procedure to load for the values needed by the solver
      * 
-     * @param fVal a matrix of f values
+     * @param absFilePath
      * @throws IOException
      * @see <code>void loadVariables()<code/>
      *

@@ -1,3 +1,5 @@
+package com.algeo;
+
 import lombok.*;
 
 // import java.util.Scanner;

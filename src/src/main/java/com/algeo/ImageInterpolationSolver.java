@@ -1,10 +1,11 @@
+package com.algeo;
+
+import com.algeo.lib.Matrix;
 import lombok.AccessLevel;
 import lombok.Getter;
 
 
 import java.awt.image.BufferedImage;
-import java.util.Arrays;
-import java.util.List;
 
 
 /**

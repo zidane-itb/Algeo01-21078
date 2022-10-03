@@ -1,3 +1,5 @@
+package com.algeo;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.AccessLevel;

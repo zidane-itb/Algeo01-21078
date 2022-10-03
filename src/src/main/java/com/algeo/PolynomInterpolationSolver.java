@@ -1,4 +1,6 @@
+package com.algeo;
 
+import com.algeo.lib.Matrix;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

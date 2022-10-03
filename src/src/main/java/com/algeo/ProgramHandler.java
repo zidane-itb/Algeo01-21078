@@ -1,6 +1,7 @@
+package com.algeo;
 
+import com.algeo.lib.Matrix;
 
-import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static java.lang.System.out;
@@ -166,7 +167,7 @@ public class ProgramHandler {
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 } else
@@ -189,7 +190,7 @@ public class ProgramHandler {
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 } else
@@ -212,7 +213,7 @@ public class ProgramHandler {
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 } else
@@ -228,7 +229,7 @@ public class ProgramHandler {
                             break;
                         }
                         catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 }
@@ -246,7 +247,7 @@ public class ProgramHandler {
                             break;
                         }
                         catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 }
@@ -261,7 +262,7 @@ public class ProgramHandler {
                             break;
                         }
                         catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matriks!\n");
+                            out.print("Try again with different matrix!\n");
                         }
                     }
                 }
@@ -277,7 +278,7 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matriks!\n");
+                        out.print("Try again with different matrix!\n");
                     }
                 }
             } else
@@ -303,7 +304,7 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matriks!\n");
+                        out.print("Try again with different matrix!\n");
                     }
                 }
 
@@ -331,7 +332,7 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matriks!\n");
+                        out.print("Try again with different matrix!\n");
                     }
                 }    
             } else
@@ -344,7 +345,7 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matriks!\n");
+                        out.print("Try again with different matrix!\n");
                     }
                 }
             } else
