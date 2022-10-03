@@ -1,6 +1,7 @@
 package com.algeo;
 
-import java.util.InputMismatchException;
+import com.algeo.lib.Matrix;
+
 import java.util.Scanner;
 
 import static java.lang.System.out;
