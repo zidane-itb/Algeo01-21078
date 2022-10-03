@@ -10,21 +10,6 @@ import java.io.IOException;
 
 public class ProgramHandler {
 
-    ////////////////////// func to delte later!////////////////////////
-    private static void onp(String txt){
-        System.out.printf("\n\n\n\n~~~~~~~~~~~onprogresss!!!!!~~~~~~~~~\n\n\n");
-        System.out.println(txt+"\n\n\n");
-        pause();
-    }
-
-    private static void pause(){
-        Scanner s = new Scanner(System.in);
-        try{
-            System.out.printf("||||||||||||pause|||||||||");
-            s.nextLine(); //so empty string can trigger it
-        } finally{}
-    }
-    ////////////////////// func to delte later!////////////////////////
 
     private static int readMode(){
         final String toDisplay =
@@ -84,7 +69,7 @@ public class ProgramHandler {
 
 
     private static int mainMenu() {
-        // handle non 1-2-3-or-4567 inputs!
+
 
         final String toDisplay =
                 "Menu\n"+
@@ -122,7 +107,7 @@ public class ProgramHandler {
     }
 
     private static int mainMenuSatu() {
-        // handle non 1-2-3-or-4 inputs!
+
 
         final String toDisplay =
                 "Sistem Persamaan Linier\n"+
@@ -155,7 +140,6 @@ public class ProgramHandler {
     }
 
     private static int mainMenuDua() {
-        // handle non 1-2 inputs!
 
         final String toDisplay =
                 "Determinan\n"+
@@ -186,7 +170,7 @@ public class ProgramHandler {
     }
 
     private static int mainMenuTiga() {
-        // handle non 1-2 inputs!
+
 
         final String toDisplay =
                 "Inverse matrix\n"+
@@ -216,8 +200,7 @@ public class ProgramHandler {
         return subMenu;
     }
 
-    //todo
-    //rename symbolnya!
+    
     public static void start() throws NumberFormatException, UnsupportedOperationException, IOException {
         while (true) {
             int selectedMenu = mainMenu();
@@ -225,7 +208,7 @@ public class ProgramHandler {
             if (selectedMenu == 1) {
                 int selectedSubMenu = mainMenuSatu();
                 if (selectedSubMenu == 1) {
-                    /*onp("Metode eleminasi Gauss");*/
+    
                     while (true) {
                         try {
                             int readMode = readMode();
@@ -450,7 +433,7 @@ public class ProgramHandler {
                             pi.loadVariables(s.nextLine());
 
                         } else {
-                            onp("handle bad input! in interpolasi polinom");
+                            out.println("handle bad input! in interpolasi polinom");
                         }
 
                         pi.solve();
@@ -478,7 +461,7 @@ public class ProgramHandler {
                             bi.loadVariables(s.nextLine());
 
                         } else {
-                            onp("handle bad input! in interpolasi bikubik");
+                            out.println("handle bad input! in interpolasi bikubik");
                         }
 
                         break;
@@ -509,7 +492,7 @@ public class ProgramHandler {
                         Image targetImage = new Image();
                         Scanner s = new Scanner(System.in);
 
-                        out.print("Image Path : public\\images\\source\\"); //TODO change path
+                        out.print("Read Image Path : ");
                         String targetPath = s.nextLine();
 
                         targetImage.readImage(targetPath);
@@ -517,7 +500,7 @@ public class ProgramHandler {
                         ii.setImage(targetImage);
                         ii.solve();
 
-                        out.print("Image Path : public\\images\\"); //TODO change path
+                        out.print("Save Image Path : ");
                         targetPath = s.nextLine();
                         Image.saveAsFile(targetPath, targetImage.getBufferedImage());
                         break;
@@ -549,7 +532,7 @@ public class ProgramHandler {
             try {
                 if (elementArr.length <= 2) {
                     verticalSize = Integer.parseInt(elementArr[0]);
-                    horizontalSize = Integer.parseInt(elementArr[1]);  // handle this
+                    horizontalSize = Integer.parseInt(elementArr[1]);
                     break;
                 }
                 else {
@@ -584,7 +567,6 @@ public class ProgramHandler {
             } catch (NumberFormatException exception) {
                 out.println("wrong format");
             }
-            // System.out.printf("%d, %d<\n", elementArr.length, horizontalSize);
 
         }
         return matrix;

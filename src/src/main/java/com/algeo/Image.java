@@ -65,12 +65,10 @@ public class Image {
      * @throws Exception
      */
     public void readImage(String filename)  throws UnsupportedOperationException {
-        String basePath = "public\\images\\source\\"; //TODO remove basePath
-
         BufferedImage img = null; 
         try {
-            img = ImageIO.read(new File(basePath + filename));
-            System.out.println("Reading from " + basePath + filename + "...");
+            img = ImageIO.read(new File(filename));
+            System.out.println("Reading from " + filename + "...");
 
             if(img == null) throw new IOException();
             System.out.println("Image read. (1/4)");
@@ -114,13 +112,11 @@ public class Image {
      * @throws Exception
      */
     public static void saveAsFile(String filename, BufferedImage imgToSave) {
-        // for now will only saves to "public\images\"
-        String basePath = "public\\images\\";
 
         try {
-            File file = new File(basePath + filename);
+            File file = new File(filename);
             ImageIO.write(imgToSave, "png", file);
-            System.out.printf("Saved Image As File in " + basePath + filename + "\n\n");    
+            System.out.printf("Saved Image As File in " + filename + "\n\n");    
         }
         catch (FileNotFoundException e){    
             System.out.printf("The folder you're trying to access doesn't exist. Try again!\n");
