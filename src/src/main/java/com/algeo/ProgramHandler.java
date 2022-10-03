@@ -1,7 +1,6 @@
 package com.algeo;
 
-import com.algeo.lib.Matrix;
-
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import static java.lang.System.out;
@@ -37,6 +36,30 @@ public class ProgramHandler {
         return scanner.nextInt();
     }
 
+    private static void saveAsFile(double[][] matrixToSave){
+        while(true){
+            out.printf("Mau save matriks ini ke file? (y/n) ");
+            Scanner s = new Scanner(System.in);
+            String ans = s.nextLine();
+
+            if (ans.equals("y") || ans.equals("Y")){
+
+                ans = s.nextLine();
+
+                try {
+                    Matrix.saveMatrixToFile("public\\files", ans, matrixToSave);
+                    System.out.printf("sadad\n");
+                    break;
+                } catch(IOException e) {
+                    out.printf("Masukan path salah!");
+                }
+            } else
+            if (ans.equals("n") || ans.equals("N")){
+                break;
+            }
+        }
+    }
+
     private static int mainMenu() {
         // handle non 1-2-3-or-4567 inputs!
 
@@ -48,9 +71,9 @@ public class ProgramHandler {
                         "4. Interpolasi Polinom\n"+
                         "5. Interpolasi Bicubic\n"+
                         "6. Regresi linier berganda\n"+
-                        "7. Keluar\n"+
+                        "7. Perbesaran Citra dengan Interpolasi Bicubic\n"+
                         "\n"+
-                        "8. Perbesaran Citra dengan Interpolasi Bicubic\n";
+                        "8. Keluar\n";
 
         System.out.println(toDisplay);
         System.out.println("Input pilihan menu :");
@@ -139,6 +162,37 @@ public class ProgramHandler {
         return subMenu;
     }
 
+    private static int mainMenuTiga() {
+        // handle non 1-2 inputs!
+
+        final String toDisplay =
+                "Inverse matrix\n"+
+                        "1. Identity with row reduction\n"+
+                        "2. Adjoint and determinant\n";
+
+        System.out.println(toDisplay);
+        System.out.println("Input pilihan submenu :");
+        Scanner scanner = new Scanner(System.in);
+        String inputUser;
+
+        int subMenu = 0;
+        while (true) {
+            inputUser = scanner.nextLine();
+            try {
+                subMenu = Integer.parseInt(inputUser);
+                if (subMenu > 0 && subMenu < 3) {
+                    out.println("\n");
+                    break;
+                }
+                else System.out.println("Tidak ada submenu tersebut. Input lagi pilihan submenu!");
+            }
+            catch (NumberFormatException exception) {
+                out.println("Tidak ada submenu tersebut. Input lagi pilihan submenu!");
+            }
+        }
+        return subMenu;
+    }
+
     //todo
     //rename symbolnya!
     public static void start() throws NumberFormatException, UnsupportedOperationException, IOException {
@@ -151,85 +205,128 @@ public class ProgramHandler {
                     /*onp("Metode eleminasi Gauss");*/
                     while (true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                Scanner s = new Scanner(System.in);
+                                matrix.loadMatrix(s.nextLine());
+                            }
+
 
                             double[][] testMatrix = matrix.getEchelonMatrix().getMatrix();
                             if (checkMatrix(testMatrix) == 1) {
                                 double[][] matrixR = matrix.getEchelonMatrix().solve();
                                 printMatrix(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 2) {
                                 double[][] matrixR = matrix.getEchelonMatrix().solve();
                                 printEqLeft(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 3) {
                                 out.print("This matrix has no solution\n");
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
+                            out.print("Try again with different matriks!\n");
                         }
                     }
                 } else
                 if (selectedSubMenu == 2){
                     while (true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                Scanner s = new Scanner(System.in);
+                                matrix.loadMatrix(s.nextLine());
+                            }
 
                             double[][] testMatrix = matrix.getReducedEchelonMatrix().getMatrix();
                             if (checkMatrix(testMatrix) == 1) {
                                 double[][] matrixR = matrix.getReducedEchelonMatrix().solve();
                                 printMatrix(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 2) {
                                 double[][] matrixR = matrix.getReducedEchelonMatrix().solve();
                                 printEqLeft(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 3) {
                                 out.print("This matrix has no solution\n");
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
+                            out.print("Try again with different matriks!\n");
                         }
                     }
                 } else
                 if (selectedSubMenu == 3){
                     while(true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                Scanner s = new Scanner(System.in);
+                                matrix.loadMatrix(s.nextLine());
+                            }
 
                             double[][] testMatrix = matrix.getInverseMatrix().getMatrix();
                             if (checkMatrix(testMatrix) == 1) {
                                 double[][] matrixR = matrix.getInverseMatrix().solve();
                                 printMatrix(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 2) {
                                 double[][] matrixR = matrix.getInverseMatrix().solve();
                                 printEqLeft(matrixR);
                                 out.print("\n");
+
+                                saveAsFile(matrixR);
                             } else if (checkMatrix(testMatrix) == 3) {
                                 out.print("This matrix has no solution\n");
                             }
                             break;
                         } catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
+                            out.print("Try again with different matriks!\n");
                         }
                     }
                 } else
                 if (selectedSubMenu == 4) {
                     while (true) {
                         try {
-                            Matrix matrix = new Matrix(loadMatrix());
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                Scanner s = new Scanner(System.in);
+                                matrix.loadMatrix(s.nextLine());
+                            }
 
                             double[][] matrixR = matrix.solveMatrixCramer();
 
                             printMatrix(matrixR);
                             out.print("\n");
+
+                            saveAsFile(matrixR);
                             break;
                         }
                         catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
+                            out.print("Try again with different matriks!\n");
                         }
                     }
                 }
@@ -247,7 +344,46 @@ public class ProgramHandler {
                             break;
                         }
                         catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
+                            out.print("Try again with different matriks!\n");
+                        }
+                    }
+                }
+                else if (selectedSubMenu == 2) {
+                    while (true) {
+                        try {
+                            int readMode = readMode();
+                            Matrix matrix = new Matrix();
+
+                            if(readMode == 1) matrix = new Matrix(loadMatrix());
+                            else if(readMode == 2) {
+                                Scanner s = new Scanner(System.in);
+                                matrix.loadMatrix(s.nextLine());
+                            }
+
+                            double determinantResult = matrix.solveDeterminantByCofactor();
+
+                            out.printf("Determinan = %.2f \n", determinantResult);
+
+                            break;
+                        }
+                        catch (UnsupportedOperationException exception) {
+                            out.print("Try again with different matriks!\n");
+                        }
+                    }
+                }
+            } else
+            if (selectedMenu == 3) {
+                int selectedSubMenu = mainMenuTiga();
+                if (selectedSubMenu == 1) {
+                    while (true) {
+                        try {
+                            Matrix matrix = new Matrix(loadMatrix());
+
+                            out.print("Inverse result :");
+                            printMatrixTest(matrix.getInverseMatrix().getMatrix());
+                            break;
+                        } catch (UnsupportedOperationException exception) {
+                            out.print("Try again with different matriks!\n");
                         }
                     }
                 }
@@ -256,29 +392,12 @@ public class ProgramHandler {
                         try {
                             Matrix matrix = new Matrix(loadMatrix());
 
-                            double determinantResult = matrix.solveDeterminantByCofactor();
-
-                            out.printf("Determinan = %.2f \n", determinantResult);
+                            out.print("Inverse result :");
+                            printMatrixTest(matrix.solveInverseByAdjoin());
                             break;
+                        } catch (UnsupportedOperationException exception) {
+                            out.print("Try again with different matriks!\n");
                         }
-                        catch (UnsupportedOperationException exception) {
-                            out.print("Try again with different matrix!\n");
-                        }
-                    }
-                }
-            } else
-            if (selectedMenu == 3) {
-                out.print("Inverse Matrix\n");
-                while (true) {
-                    try {
-                        Matrix matrix = new Matrix(loadMatrix());
-
-                        out.print("Inverse result :");
-                        printMatrixTest(matrix.getInverseMatrix().getMatrix());
-                        break;
-                    }
-                    catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matrix!\n");
                     }
                 }
             } else
@@ -304,7 +423,7 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matrix!\n");
+                        out.print("Try again with different matriks!\n");
                     }
                 }
 
@@ -318,23 +437,22 @@ public class ProgramHandler {
 
                         if ( readMode == 1 ){
                             bi.loadVariables();
+                            bi.solve();
                         } else
                         if ( readMode == 2 ){
-                            //to build
-                            // Scanner s = new Scanner(System.in);
-                            // bi.loadVariables(s.nextLine());
+                            Scanner s = new Scanner(System.in);
+                            bi.loadVariables(s.nextLine());
 
                         } else {
                             onp("handle bad input! in interpolasi bikubik");
                         }
 
-                        bi.solve();
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matrix!\n");
+                        out.print("Try again with different matriks!\n");
                     }
-                }    
+                }
             } else
             if (selectedMenu == 6) {
                 out.print("Regresi Linier Berganda\n");
@@ -345,14 +463,11 @@ public class ProgramHandler {
                         break;
                     }
                     catch (UnsupportedOperationException exception) {
-                        out.print("Try again with different matrix!\n");
+                        out.print("Try again with different matriks!\n");
                     }
                 }
             } else
             if (selectedMenu == 7) {
-                break;
-            } else
-            if (selectedMenu == 8) {
                 out.print("Perbesaran Citra dengan Interpolasi Bicubic\n");
                 while (true) {
                     try {
@@ -377,8 +492,11 @@ public class ProgramHandler {
                         out.print("Try again with different filepath!\n");
                     }
 
-                    
+
                 }
+            } else
+            if (selectedMenu == 8) {
+                break;
             }
         }
     }

@@ -541,6 +541,33 @@ public class Matrix {
             return MatrixHelper.solveCrammerMatrix(mainMatrix, rightSideMatrix);
         }
 
+        private static double[][] transposeMatrix(double[][] matrix) {
+            double[][] resultMatrix = new double[matrix[0].length][matrix.length];
+
+            for (int i = 0; i < matrix.length; i++) {
+                for (int j = 0; j < matrix[0].length; j++) {
+                    resultMatrix[j][i] = matrix[i][j];
+                }
+            }
+            return resultMatrix;
+        }
+        private static double[][] getInverseMatrixByAdjoint(double[][] matrix) {
+            double[][] newMatrix = copyMatrix(matrix);
+            double[][] cofactorMatrix = new double[newMatrix.length][newMatrix[0].length];
+
+
+            for (int i = 0; i < newMatrix.length; i++) {
+                for (int j = 0; j < newMatrix[0].length; j++) {
+                    cofactorMatrix[i][j] = (1/getDeterminantByRowReduction(matrix)) * Math.pow(-1, i+j) *
+                            getDeterminantByRowReduction(getMinorMatrix(newMatrix, i, j));
+                }
+
+            }
+            double[][] inverseMatrix = transposeMatrix(cofactorMatrix);
+
+            return inverseMatrix;
+        }
+
     }
 
     /**
@@ -664,6 +691,13 @@ public class Matrix {
             throw new UnsupportedOperationException("Matrix need to be square");
         }
         return MatrixHelper.getDeterminantByRowReduction(getMatrix());
+    }
+
+    public double[][] solveInverseByAdjoin() {
+        if (getVerticalSize() != getHorizontalSize()) {
+            throw new UnsupportedOperationException("Matrix need to be square");
+        }
+        return MatrixHelper.getInverseMatrixByAdjoint(getMatrix());
     }
 
     /**
