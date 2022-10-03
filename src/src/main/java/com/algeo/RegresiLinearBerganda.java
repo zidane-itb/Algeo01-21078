@@ -1,3 +1,7 @@
+package com.algeo;
+
+import com.algeo.lib.Matrix;
+
 import java.util.Scanner;
 
 import static java.lang.System.*;
