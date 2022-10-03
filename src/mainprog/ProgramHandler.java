@@ -47,7 +47,9 @@ public class ProgramHandler {
                         "4. Interpolasi Polinom\n"+
                         "5. Interpolasi Bicubic\n"+
                         "6. Regresi linier berganda\n"+
-                        "7. Keluar\n";
+                        "7. Keluar\n"+
+                        "\n"+
+                        "8. Perbesaran Citra dengan Interpolasi Bicubic\n";
 
         System.out.println(toDisplay);
         System.out.println("Input pilihan menu :");
@@ -59,7 +61,7 @@ public class ProgramHandler {
             inputUser = scanner.nextLine();
             try {
                 menu = Integer.parseInt(inputUser);
-                if (menu > 0 && menu < 8) {
+                if (menu > 0 && menu < 9) {
                     out.println("\n");
                     break;
                 }
@@ -280,7 +282,7 @@ public class ProgramHandler {
                 }
             } else
             if (selectedMenu == 4) {
-                out.print("Interpolasi Polinom");
+                out.print("Interpolasi Polinom\n");
                 while (true) {
                     try {
                         PolynomInterpolationSolver pi = new PolynomInterpolationSolver();
@@ -307,7 +309,31 @@ public class ProgramHandler {
 
             } else
             if (selectedMenu == 5) {
-                onp("limaas");
+                out.print("Interpolasi Bikubik\n");
+                while (true) {
+                    try {
+                        BicubicInterpolationSolver bi = new BicubicInterpolationSolver();
+                        int readMode = readMode();
+
+                        if ( readMode == 1 ){
+                            bi.loadVariables();
+                        } else
+                        if ( readMode == 2 ){
+                            //to build
+                            // Scanner s = new Scanner(System.in);
+                            // bi.loadVariables(s.nextLine());
+
+                        } else {
+                            onp("handle bad input! in interpolasi bikubik");
+                        }
+
+                        bi.solve();
+                        break;
+                    }
+                    catch (UnsupportedOperationException exception) {
+                        out.print("Try again with different matriks!\n");
+                    }
+                }    
             } else
             if (selectedMenu == 6) {
                 out.print("Regresi Linier Berganda\n");
@@ -324,6 +350,34 @@ public class ProgramHandler {
             } else
             if (selectedMenu == 7) {
                 break;
+            } else
+            if (selectedMenu == 8) {
+                out.print("Perbesaran Citra dengan Interpolasi Bicubic\n");
+                while (true) {
+                    try {
+                        ImageInterpolationSolver ii = new ImageInterpolationSolver();
+                        Image targetImage = new Image();
+                        Scanner s = new Scanner(System.in);
+
+                        out.print("Image Path : public\\images\\source\\"); //TODO change path
+                        String targetPath = s.nextLine();
+
+                        targetImage.readImage(targetPath);
+
+                        ii.setImage(targetImage);
+                        ii.solve();
+
+                        out.print("Image Path : public\\images\\"); //TODO change path
+                        targetPath = s.nextLine();
+                        Image.saveAsFile(targetPath, targetImage.getBufferedImage());
+                        break;
+                    }
+                    catch (UnsupportedOperationException e) {
+                        out.print("Try again with different filepath!\n");
+                    }
+
+                    
+                }
             }
         }
     }

@@ -69,17 +69,13 @@ public class ImageInterpolationSolver {
  
         System.out.println("Interpolating image... (2/4)");
 
-        Integer[] intArr = {0, 1, 2, 3}; // 4 parallel streams
-        List<Integer> list = Arrays.asList(intArr);
-        list.parallelStream().forEach(e -> {
-            for(int i = (e)*(this.targetWidth/intArr.length); i < (e+1)*(this.targetWidth/intArr.length); i++){
-                for(int j = 0; j < this.targetHeight; j++){
-                    bi.loadVariables((getFValue((int)(j/2), (int)(i/2))));
+        for(int i = 0; i < (this.targetWidth); i++){
+            for(int j = 0; j < this.targetHeight; j++){
+                bi.loadVariables((getFValue((int)(j/2), (int)(i/2))));
 
-                    newData[i*this.targetWidth + j] = (int)bi.solveF(0d, 0d);
-                }
+                newData[i*this.targetWidth + j] = (int)bi.solveF(0d, 0d);
             }
-        });
+        }
 
         final long finish = System.currentTimeMillis();
 

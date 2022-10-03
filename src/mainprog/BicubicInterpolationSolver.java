@@ -3,6 +3,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -60,12 +65,42 @@ public class BicubicInterpolationSolver {
      * a procedure to load for the values needed by the solver
      * 
      * @param fVal a matrix of f values
+     * @throws IOException
+     * @see <code>void loadVariables()<code/>
+     *
+     */
+    public void loadVariables(String absFilePath) throws IOException{
+        Path path = Paths.get(absFilePath);
+
+        List<String> matrixLines = Files.readAllLines(path);
+        
+        double[][] fVal = new double[4][4];
+        int idx = 0;
+        for (String line: matrixLines) {
+            String[] lineS = line.split(" ");
+            for(int i = 0; i < 4; i++){
+                fVal[idx][i] = Double.parseDouble(lineS[i]);
+            }
+            
+            ++idx;
+        }
+
+        setFValue(new Matrix(fVal));
+        setACoeffMatrix(Matrix.getProductMatrix(getXMatrix().getInverseMatrix(), getFValue()));
+
+        solve();
+    }
+
+    /**
+     * a procedure to load for the values needed by the solver
+     * 
+     * @param fVal a matrix of f values
      * @see <code>void loadVariables()<code/>
      *
      */
     public void loadVariables(Matrix fVal){
         setFValue(fVal);
-        // matrix of a coefficients
+        
         setACoeffMatrix(Matrix.getProductMatrix(getXMatrix().getInverseMatrix(), getFValue()));
     }
 
@@ -76,7 +111,7 @@ public class BicubicInterpolationSolver {
      *
      */
     public void loadVariables(){
-        // matrix of a coefficients
+        
         loadFValue();
         setACoeffMatrix(Matrix.getProductMatrix(getXMatrix().getInverseMatrix(), getFValue()));
     }
@@ -104,8 +139,6 @@ public class BicubicInterpolationSolver {
             }
         }
 
-        // System.out.printf("%f << bicubic\n", res);
-
         return res;
     }
 
@@ -116,7 +149,7 @@ public class BicubicInterpolationSolver {
      * @see <code>double solveF(Double x, Double y)<code/>
      *
      */
-    public void solveF(){
+    public void solve(){
         if(getACoeffMatrix() == null)
             loadVariables();    
 
@@ -124,6 +157,8 @@ public class BicubicInterpolationSolver {
         double x = scanner.nextDouble();
         double y = scanner.nextDouble();
 
-        solveF(x, y);
+        double result = solveF(x, y);
+
+        System.out.printf("f(%.4f, %.4f) = %.4f\n\n", x, y, result);
     }
 }

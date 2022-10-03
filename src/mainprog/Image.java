@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
@@ -24,7 +25,7 @@ public class Image {
     @Getter(AccessLevel.PROTECTED) @Setter(AccessLevel.PROTECTED)
     ImageColor[] imageColor;
 
-    private void Build(BufferedImage image){ //TODO prob n bugs
+    private void Build(BufferedImage image){ 
         this.width = image.getWidth();
         this.height = image.getHeight();
         this.imageColor = new ImageColor[this.width * this.height];
@@ -43,7 +44,7 @@ public class Image {
      * @throws Exception
      */
     public BufferedImage readAsBufferedImage(String filename) throws Exception{
-        String basePath = "public\\images\\source\\"; //TODO remove basePath
+        String basePath = "public\\images\\source\\"; 
 
         BufferedImage img = null; 
         try {
@@ -61,19 +62,21 @@ public class Image {
      * @param filename filepath as filename
      * @throws Exception
      */
-    public void readImage(String filename) throws Exception{
+    public void readImage(String filename)  throws UnsupportedOperationException {
         String basePath = "public\\images\\source\\"; //TODO remove basePath
 
         BufferedImage img = null; 
         try {
             img = ImageIO.read(new File(basePath + filename));
             System.out.println("Reading from " + basePath + filename + "...");
-        } catch (IOException e) {
-            System.out.println("Read process failed.");
-        }
 
-        System.out.println("Image read. (1/4)");
-        Build(img);
+            if(img == null) throw new IOException();
+            System.out.println("Image read. (1/4)");
+            Build(img);
+        } catch (IOException e) {
+            
+            throw new UnsupportedOperationException("Read process failed.");
+        }
     }
 
     /**
@@ -89,7 +92,7 @@ public class Image {
      * get BufferedImage value of this image object
      */
     public BufferedImage getBufferedImage(){
-        BufferedImage res = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB); //tend to go wrong with argb
+        BufferedImage res = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB); 
 
         System.out.println("Getting buffered image... (4/4)");
 
@@ -108,11 +111,20 @@ public class Image {
      * @param imgToSave bufferedimage to save as file
      * @throws Exception
      */
-    public static void saveAsFile(String filename, BufferedImage imgToSave) throws Exception{
+    public static void saveAsFile(String filename, BufferedImage imgToSave) {
         // for now will only saves to "public\images\"
         String basePath = "public\\images\\";
-        File file = new File(basePath + filename);
-        ImageIO.write(imgToSave, "png", file);
-        System.out.printf("Saved Image As File in " + basePath + filename + "\n\n");
+
+        try {
+            File file = new File(basePath + filename);
+            ImageIO.write(imgToSave, "png", file);
+            System.out.printf("Saved Image As File in " + basePath + filename + "\n\n");    
+        }
+        catch (FileNotFoundException e){    
+            System.out.printf("The folder you're trying to access doesn't exist. Try again!\n");
+        }
+        catch (IOException e){
+            
+        }
     }
 }
